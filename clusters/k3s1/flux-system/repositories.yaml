@@ -6,5 +6,7 @@ metadata:
 spec:
   interval: 1m
   url: https://github.com/alexfirilov/twofold
+  secretRef:
+    name: twofold-auth
   ref:
     branch: main
