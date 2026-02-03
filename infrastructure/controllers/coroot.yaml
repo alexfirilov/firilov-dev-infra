@@ -34,5 +34,5 @@ spec:
     clickhouse:
       fullnameOverride: "coroot-clickhouse"
       image:
-        repository: bitnami/clickhouse
-        tag: "24.1.2-debian-11-r4"
+        repository: bitnamilegacy/clickhouse
+        tag: "latest"
