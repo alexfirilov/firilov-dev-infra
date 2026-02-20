@@ -24,17 +24,9 @@ spec:
         name: tailscale
         namespace: flux-system
   values:
-    oauth:
-      clientId: ""
-      clientSecret: ""
-  valuesFrom:
-    - kind: Secret
-      name: tailscale-operator-oauth
-      valuesKey: client-id
-      targetPath: oauth.clientId
-      optional: true
-    - kind: Secret
-      name: tailscale-operator-oauth
-      valuesKey: client-secret
-      targetPath: oauth.clientSecret
-      optional: true
+    operatorConfig:
+      defaultTags:
+        - tag:k3s
+    proxyConfig:
+      defaultTags: "tag:k3s"
+

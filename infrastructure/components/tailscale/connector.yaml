@@ -4,6 +4,8 @@ metadata:
   name: home-subnet-router
   namespace: tailscale
 spec:
+  tags:
+    - tag:k3s
   subnetRouter:
     advertiseRoutes:
       - "10.100.102.0/24"
