@@ -4,3 +4,4 @@ resources:
   - envoy-controller.yaml
   - coroot.yaml
   - coroot-route.yaml
+  - tailscale.yaml

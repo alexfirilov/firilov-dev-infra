@@ -1,0 +1,50 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: tailscale
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://pkgs.tailscale.com/helmcharts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+  namespace: flux-system
+spec:
+  releaseName: tailscale-operator
+  targetNamespace: tailscale
+  interval: 30m
+  chart:
+    spec:
+      chart: tailscale-operator
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale
+        namespace: flux-system
+  values:
+    oauth:
+      clientId: ""
+      clientSecret: ""
+  valuesFrom:
+    - kind: Secret
+      name: tailscale-operator-oauth
+      valuesKey: client-id
+      targetPath: oauth.clientId
+      optional: true
+    - kind: Secret
+      name: tailscale-operator-oauth
+      valuesKey: client-secret
+      targetPath: oauth.clientSecret
+      optional: true
+---
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: home-subnet-router
+  namespace: tailscale
+spec:
+  subnetRouter:
+    advertiseRoutes:
+      - "10.100.102.0/24"
