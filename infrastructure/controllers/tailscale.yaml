@@ -38,13 +38,3 @@ spec:
       valuesKey: client-secret
       targetPath: oauth.clientSecret
       optional: true
----
-apiVersion: tailscale.com/v1alpha1
-kind: Connector
-metadata:
-  name: home-subnet-router
-  namespace: tailscale
-spec:
-  subnetRouter:
-    advertiseRoutes:
-      - "10.100.102.0/24"
