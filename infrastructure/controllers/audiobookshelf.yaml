@@ -28,6 +28,19 @@ spec:
   values:
     env:
       TZ: Asia/Jerusalem
+    persistence:
+      config:
+        enabled: true
+        size: 1Gi
+        accessMode: ReadWriteOnce
+      metadata:
+        enabled: true
+        size: 1Gi
+        accessMode: ReadWriteOnce
+      media:
+        enabled: true
+        size: 1Gi
+        accessMode: ReadWriteOnce
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
