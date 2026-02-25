@@ -5,3 +5,4 @@ resources:
   - coroot.yaml
   - coroot-route.yaml
   - tailscale.yaml
+  - audiobookshelf.yaml

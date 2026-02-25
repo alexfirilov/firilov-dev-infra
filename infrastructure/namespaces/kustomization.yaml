@@ -4,3 +4,4 @@ resources:
   - twofold.yaml
   - coroot.yaml
   - tailscale.yaml
+  - audiobookshelf.yaml
