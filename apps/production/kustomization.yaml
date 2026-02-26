@@ -4,3 +4,4 @@ resources:
   - ../base/audiobookshelf
   - ../base/coroot
   - ../base/twofold
+  - ../base/homepage

@@ -1,0 +1,33 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: homepage
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://jameswynn.github.io/helm-charts/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: homepage
+  namespace: flux-system
+spec:
+  releaseName: homepage
+  targetNamespace: homepage
+  install:
+    createNamespace: true
+  interval: 30m
+  chart:
+    spec:
+      chart: homepage
+      sourceRef:
+        kind: HelmRepository
+        name: homepage
+        namespace: flux-system
+  values:
+    env:
+    - name: HOMEPAGE_ALLOWED_HOSTS
+      value: firilov.dev
+    - name: TZ
+      value: Asia/Jerusalem
