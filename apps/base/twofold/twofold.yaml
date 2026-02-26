@@ -8,11 +8,11 @@ spec:
   targetNamespace: twofold
   sourceRef:
     kind: GitRepository
-    name: twofold 
+    name: twofold
   path: "./k8s"
   prune: true
   dependsOn:
-    - name: infrastructure-namespaces
+    - name: infrastructure-configs
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageRepository

@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - envoy-gateway.yaml
-  - tailscale.yaml
+  - gateway.yaml
+  - cloudflared.yaml
+  - tailscale-connector.yaml
