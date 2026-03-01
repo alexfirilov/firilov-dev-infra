@@ -1,0 +1,35 @@
+- name: Bootstrap Proxmox PVE1 for Terraform API Access
+  hosts: proxmox
+  gather_facts: no
+  
+  tasks:
+    - name: Adding 'terraform' user
+      command: pveum user add terraform@pve
+      register: user_add
+      failed_when: user_add.rc != 0 and 'already exists' not in user_add.stderr # Incase user already exists
+      changed_when: user_add.rc == 0
+
+    - name: Assign administrator role to the user
+      command: pveum acl modify / -user terraform@pve -role Administrator
+
+    - name: Delete existing token # In case we re run the playbook
+      command: pveum user token delete terraform@pve setup
+      register: token_del
+      failed_when: false 
+      changed_when: token_del.rc == 0
+
+    - name: Generate the API token and output as JSON
+      command: pveum user token add terraform@pve setup --privsep 0 --output-format json
+      register: token_add
+
+    - name: Parse the JSON output from Proxmox
+      set_fact:
+        pve_token: "{{ token_add.stdout | from_json }}"
+
+    - name: Save the credentials locally for Terraform to use
+      local_action:
+        module: copy
+        content: |
+          proxmox_endpoint  = "https://{{ pve_host_ip }}:8006/"
+          proxmox_api_token = "{{ pve_token['full-tokenid'] }}={{ pve_token['value'] }}"
+        dest: "../../terraform/pve1/terraform.auto.tfvars" # Saves the API token in the pve1 terraform directory.

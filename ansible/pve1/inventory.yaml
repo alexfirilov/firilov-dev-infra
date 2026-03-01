@@ -1,0 +1,8 @@
+all:
+  children:
+    proxmox:
+      hosts:
+        pve_node:
+          ansible_host: "{{ pve_host_ip }}"
+      vars:
+        ansible_user: "{{ pve_ssh_user }}"
