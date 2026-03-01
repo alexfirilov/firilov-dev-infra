@@ -1,0 +1,34 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: n8n
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://community-charts.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: n8n
+  namespace: flux-system
+spec:
+  releaseName: n8n
+  targetNamespace: n8n
+  install:
+    createNamespace: true
+  interval: 30m
+  chart:
+    spec:
+      chart: n8n
+      sourceRef:
+        kind: HelmRepository
+        name: n8n
+        namespace: flux-system
+  values:
+    timezone: "Asia/Jerusalem"
+    main:
+      persistence:
+        enabled: true
+      extraEnvVars:
+        WEBHOOK_URL: "https://n8n.firilov.dev"

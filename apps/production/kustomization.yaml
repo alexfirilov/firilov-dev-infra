@@ -5,3 +5,4 @@ resources:
   - ../base/coroot
   - ../base/twofold
   - ../base/homepage
+  - ..base/n8n
