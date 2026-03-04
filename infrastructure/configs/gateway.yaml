@@ -19,3 +19,14 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: plex-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: All
