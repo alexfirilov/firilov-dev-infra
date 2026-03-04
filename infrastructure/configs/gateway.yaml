@@ -25,7 +25,7 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: plex-firilov-dev-tls
+          - name: jellyfin-firilov-dev-tls
             namespace: envoy-gateway-system
       allowedRoutes:
         namespaces:

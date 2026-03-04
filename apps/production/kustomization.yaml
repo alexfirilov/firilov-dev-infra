@@ -7,4 +7,4 @@ resources:
   - ../base/homepage
   - ../base/n8n
   - ../base/qbittorrent
-  - ../base/plex
+  - ../base/jellyfin
