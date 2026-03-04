@@ -19,13 +19,26 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    - name: https
+    - name: https-jellyfin
       protocol: HTTPS
       port: 443
+      hostname: jellyfin.firilov.dev
       tls:
         mode: Terminate
         certificateRefs:
           - name: jellyfin-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https-radarr
+      protocol: HTTPS
+      port: 443
+      hostname: radarr.firilov.dev
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: radarr-firilov-dev-tls
             namespace: envoy-gateway-system
       allowedRoutes:
         namespaces:
