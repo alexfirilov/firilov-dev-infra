@@ -10,3 +10,4 @@ resources:
   - ../base/jellyfin
   - ../base/radarr
   - ../base/jellyseerr
+  - ../base/prowlarr
