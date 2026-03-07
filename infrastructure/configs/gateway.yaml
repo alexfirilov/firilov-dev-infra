@@ -67,3 +67,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: https-sonarr
+      protocol: HTTPS
+      port: 443
+      hostname: sonarr.firilov.dev
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: sonarr-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: All
