@@ -11,3 +11,4 @@ resources:
   - ../base/radarr
   - ../base/jellyseerr
   - ../base/prowlarr
+  - ../base/byparr

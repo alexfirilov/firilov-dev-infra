@@ -18,15 +18,15 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: jellyfin-firilov-dev
+  name: byparr-firilov-dev
   namespace: envoy-gateway-system
 spec:
-  secretName: jellyfin-firilov-dev-tls
+  secretName: byparr-firilov-dev-tls
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - jellyfin.firilov.dev
+    - byparr.firilov.dev
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

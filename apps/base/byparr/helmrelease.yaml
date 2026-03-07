@@ -1,0 +1,57 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: bjw-s
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 24h
+  url: oci://ghcr.io/bjw-s-labs/helm
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: byparr
+  namespace: flux-system
+spec:
+  releaseName: byparr
+  targetNamespace: byparr
+  install:
+    createNamespace: true
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 4.x
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  values:
+    controllers:
+      byparr:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/thephaseless/byparr
+              tag: main
+            env:
+              TZ: Asia/Jerusalem
+              PORT: "8191"
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                memory: 1Gi
+    service:
+      app:
+        controller: byparr
+        ports:
+          http:
+            port: 8191
