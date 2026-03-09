@@ -4,3 +4,10 @@ resources:
   - namespace.yaml
   - helmrelease.yaml
   - httproute.yaml
+configMapGenerator:
+  - name: homepage-values
+    namespace: flux-system
+    files:
+      - values.yaml=values.yaml
+generatorOptions:
+  disableNameSuffixHash: true

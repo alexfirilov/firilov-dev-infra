@@ -25,9 +25,7 @@ spec:
         kind: HelmRepository
         name: homepage
         namespace: flux-system
-  values:
-    env:
-    - name: HOMEPAGE_ALLOWED_HOSTS
-      value: firilov.dev
-    - name: TZ
-      value: Asia/Jerusalem
+  valuesFrom:
+    - kind: ConfigMap
+      name: homepage-values
+      valuesKey: values.yaml
