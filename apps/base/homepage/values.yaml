@@ -5,8 +5,41 @@ env:
     value: Asia/Jerusalem
 
 config:
+  settings:
+    title: Firilov Dev
+    background: 
+        image: https://w.wallhaven.cc/full/4v/wallhaven-4vw5v8.jpg
+        blur: sm
+        saturate: 50
+        brightness: 50
+        opacity: 80
+    useEqualHeights: true
+    headerStyle: clean
+    quicklaunch:
+        hideInternetSearch: true
+        showSearchSuggestions: false
+        hideVisitURL: true
+        provider: google
+    hideVersion: true
+    layout:
+      - Media Servers:
+          style: row
+          columns: 3
+      - Media Management:
+          style: row
+          columns: 4
+      - Infrastructure & Ops:
+          style: row
+          columns: 1
+      - Automation & Tools:
+          style: row
+          columns: 1
+      - Development:
+          style: row
+          columns: 1
+
   services:
-    - Media Management:
+    - Media Servers:
         - Jellyfin:
             icon: jellyfin
             href: https://jellyfin.firilov.dev
@@ -14,13 +47,16 @@ config:
         - Jellyseerr:
             icon: jellyseerr
             href: https://jellyseerr.firilov.dev
-            description: Media requests
-        - qBittorrent:
-            icon: qbittorrent
-            href: https://qbittorrent.firilov.dev
+            description: Media Requests
         - Audiobookshelf:
             icon: audiobookshelf
             href: https://audiobookshelf.firilov.dev
+            description: Audibooks Server
+            
+    - Media Management:
+        - qBittorrent:
+            icon: qbittorrent
+            href: https://qbittorrent.firilov.dev
         - Radarr:
             icon: radarr
             href: https://radarr.firilov.dev
@@ -42,8 +78,8 @@ config:
             icon: n8n
             href: https://n8n.firilov.dev
 
-bookmarks:
+  bookmarks:
     - Development:
         - GitHub:
-            icon: github
-            href: https://github.com/AlexFirilov?tab=repositories
+            - icon: github
+              href: https://github.com/AlexFirilov?tab=repositories
