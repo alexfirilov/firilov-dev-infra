@@ -13,3 +13,4 @@ resources:
   - ../base/prowlarr
   - ../base/byparr
   - ../base/sonarr
+  - ../base/bazarr

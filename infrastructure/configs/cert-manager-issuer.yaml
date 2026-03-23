@@ -79,3 +79,16 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - sonarr.firilov.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bazarr-firilov-dev
+  namespace: envoy-gateway-system
+spec:
+  secretName: bazarr-firilov-dev-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - bazarr.firilov.dev

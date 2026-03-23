@@ -79,3 +79,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: https-bazarr
+      protocol: HTTPS
+      port: 443
+      hostname: bazarr.firilov.dev
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: bazarr-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: All
