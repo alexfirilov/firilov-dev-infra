@@ -27,7 +27,7 @@ config:
           columns: 3
       - Media Management:
           style: row
-          columns: 4
+          columns: 5
       - Infrastructure & Ops:
           style: row
           columns: 1
@@ -66,6 +66,9 @@ config:
         - Prowlarr:
             icon: prowlarr
             href: https://prowlarr.firilov.dev
+        - Bazarr:
+            icon: bazarr
+            href: https://bazarr.firilov.dev
 
     - Infrastructure & Ops:
         - Coroot:
