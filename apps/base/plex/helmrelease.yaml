@@ -30,6 +30,7 @@ spec:
               PUID: "1000"
               PGID: "1000"
               VERSION: docker
+              PLEX_CLAIM: "claim-C2sk8PESHLFPsw_Brca4"
             probes:
               liveness:
                 enabled: true
