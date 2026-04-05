@@ -14,3 +14,4 @@ resources:
   - ../base/byparr
   - ../base/sonarr
   - ../base/bazarr
+  - ../base/plex
