@@ -39,3 +39,10 @@ spec:
         enabled: true
         type: pvc
         existingClaim: media
+    volumes:
+      - name: dri
+        hostPath:
+          path: /dev/dri
+    volumeMounts:
+      - name: dri
+        mountPath: /dev/dri

@@ -55,3 +55,9 @@ spec:
         existingClaim: media
         globalMounts:
           - path: /mnt/media
+      dri:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/dri
+        globalMounts:
+          - path: /dev/dri
