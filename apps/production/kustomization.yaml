@@ -15,3 +15,4 @@ resources:
   - ../base/sonarr
   - ../base/bazarr
   - ../base/plex
+  - ../base/recyclarr
