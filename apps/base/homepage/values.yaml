@@ -24,7 +24,7 @@ config:
     layout:
       - Media Servers:
           style: row
-          columns: 4
+          columns: 3
       - Media Management:
           style: row
           columns: 5
@@ -43,10 +43,6 @@ config:
         - Jellyfin:
             icon: jellyfin
             href: https://jellyfin.firilov.dev
-            description: Media Server
-        - Plex:
-            icon: plex
-            href: https://plex.firilov.dev
             description: Media Server
         - Jellyseerr:
             icon: jellyseerr
