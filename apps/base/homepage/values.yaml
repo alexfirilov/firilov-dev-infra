@@ -24,26 +24,16 @@ config:
     layout:
       - Media Servers:
           style: row
-          columns: 4
+          columns: 3
       - Media Management:
           style: row
           columns: 5
-      - Infrastructure & Ops:
-          style: row
-          columns: 1
-      - Automation & Tools:
-          style: row
-          columns: 1
       - Development:
           style: row
           columns: 1
 
   services:
     - Media Servers:
-        - Jellyfin:
-            icon: jellyfin
-            href: https://jellyfin.firilov.dev
-            description: Media Server
         - Plex:
             icon: plex
             href: https://plex.firilov.dev
@@ -73,17 +63,6 @@ config:
         - Bazarr:
             icon: bazarr
             href: https://bazarr.firilov.dev
-
-    - Infrastructure & Ops:
-        - Coroot:
-            icon: coroot
-            href: https://monitor.firilov.dev
-            description: Observability
-            
-    - Automation & Tools:
-        - n8n:
-            icon: n8n
-            href: https://n8n.firilov.dev
 
   bookmarks:
     - Development:
