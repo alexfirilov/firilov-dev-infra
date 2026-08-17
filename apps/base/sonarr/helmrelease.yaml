@@ -30,6 +30,11 @@ spec:
       tag: 4.0.16
     env:
       TZ: Asia/Jerusalem
+    # Match qBittorrent's uid/gid so imports hardlink instead of copy.
+    podSecurityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
     persistence:
       config:
         enabled: true

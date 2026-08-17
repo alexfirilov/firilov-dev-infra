@@ -31,6 +31,11 @@ spec:
       tag: 5.1.4
     env:
       TZ: Asia/Jerusalem
+      # Run as the shared media user so Sonarr/Radarr can hardlink downloads
+      # into the library (kernel fs.protected_hardlinks requires write access).
+      PUID: "1000"
+      PGID: "1000"
+      UMASK: "002"
     persistence:
       config:
         enabled: true
