@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: recyclarr-config
+  namespace: recyclarr
+data:
+  recyclarr.yml: |
+    # Based on the official Recyclarr config templates (v8 syntax):
+    # https://github.com/recyclarr/config-templates
+    #   sonarr/templates/web-1080p.yml + sonarr/templates/anime-remux-1080p.yml
+    #   radarr/templates/hd-bluray-web.yml + radarr/templates/anime-remux-1080p.yml
+    # Merged into one instance per app; quality_definition uses the standard
+    # (series/movie) sizes since each instance mixes standard and anime profiles.
+    sonarr:
+      sonarr:
+        base_url: http://sonarr.sonarr.svc.cluster.local:8989
+        api_key: !env_var SONARR_API_KEY
+
+        quality_definition:
+          type: series
+
+        quality_profiles:
+          # https://trash-guides.info/Sonarr/sonarr-setup-quality-profiles/#web-1080p
+          - trash_id: 72dae194fc92bf828f32cde7744e51a1  # WEB-1080p
+            reset_unmatched_scores:
+              enabled: true
+          # https://trash-guides.info/Sonarr/sonarr-setup-quality-profiles-anime/
+          - trash_id: 20e0fc959f1f1704bed501f23bdae76f  # [Anime] Remux-1080p
+            reset_unmatched_scores:
+              enabled: true
+
+        # Default-enabled CF groups from the web-1080p template.
+        # https://recyclarr.dev/guide/cf-groups/
+        custom_format_groups:
+          add:
+            - trash_id: 158188097a58d7687dee647e04af0da3  # [Optional] Golden Rule HD
+            - trash_id: 74aff4168620ed49dcc67e92b2c2a5b4  # [Optional] Language Profiles
+            - trash_id: 85fae4a2294965b75710ef2989c850eb  # [Streaming Services] HD/UHD boost
+            - trash_id: 59c3af66780d08332fdc64e68297098f  # [Unwanted] Unwanted Formats
+
+    radarr:
+      radarr:
+        base_url: http://radarr.radarr.svc.cluster.local:7878
+        api_key: !env_var RADARR_API_KEY
+
+        quality_definition:
+          type: movie
+
+        quality_profiles:
+          # https://trash-guides.info/Radarr/radarr-setup-quality-profiles/#hd-bluray-web
+          - trash_id: d1d67249d3890e49bc12e275d989a7e9  # HD Bluray + WEB
+            reset_unmatched_scores:
+              enabled: true
+          # https://trash-guides.info/Radarr/radarr-setup-quality-profiles-anime/
+          - trash_id: 722b624f9af1e492284c4bc842153a38  # [Anime] Remux-1080p
+            reset_unmatched_scores:
+              enabled: true
+
+        # Default-enabled CF groups from the hd-bluray-web template.
+        custom_format_groups:
+          add:
+            - trash_id: f8bf8eab4617f12dfdbd16303d8da245  # [Optional] Golden Rule HD
+            - trash_id: a3ac6af01d78e4f21fcb75f601ac96df  # [Unwanted] Unwanted Formats

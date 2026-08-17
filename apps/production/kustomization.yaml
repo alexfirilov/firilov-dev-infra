@@ -8,6 +8,7 @@ resources:
   - ../base/radarr
   - ../base/jellyseerr
   - ../base/prowlarr
+  - ../base/recyclarr
   - ../base/byparr
   - ../base/sonarr
   - ../base/bazarr
