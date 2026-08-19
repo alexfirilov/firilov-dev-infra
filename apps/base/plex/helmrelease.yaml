@@ -19,8 +19,25 @@ spec:
         namespace: flux-system
   values:
     defaultPodOptions:
-      nodeSelector:
-        kubernetes.io/hostname: k3s2
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s2
+      tolerations:
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 60
     controllers:
       plex:
         containers:
@@ -50,8 +67,7 @@ spec:
       config:
         enabled: true
         type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 5Gi
+        existingClaim: plex-config
         globalMounts:
           - path: /config
       media:

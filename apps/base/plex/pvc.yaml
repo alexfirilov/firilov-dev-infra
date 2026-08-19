@@ -29,3 +29,40 @@ spec:
       storage: 393Gi
   volumeName: plex-media
   storageClassName: ""
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-config
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - hard
+    - noatime
+    - nolock
+    - vers=4.2
+  claimRef:
+    namespace: plex
+    name: plex-config
+  nfs:
+    server: 10.100.102.54
+    path: /srv/plex-config
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: plex
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  volumeName: plex-config
+  storageClassName: ""
