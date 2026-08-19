@@ -22,6 +22,8 @@ spec:
       plex:
         containers:
           app:
+            securityContext:
+              privileged: true
             image:
               repository: lscr.io/linuxserver/plex
               tag: latest
