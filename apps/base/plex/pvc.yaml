@@ -6,13 +6,14 @@ spec:
   capacity:
     storage: 393Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: ""
   claimRef:
     namespace: plex
     name: media
-  hostPath:
+  nfs:
+    server: 10.100.102.54
     path: /mnt/media
 ---
 apiVersion: v1
@@ -22,7 +23,7 @@ metadata:
   namespace: plex
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 393Gi

@@ -18,6 +18,9 @@ spec:
         name: bjw-s
         namespace: flux-system
   values:
+    defaultPodOptions:
+      nodeSelector:
+        kubernetes.io/hostname: k3s2
     controllers:
       plex:
         containers:
