@@ -27,11 +27,13 @@ spec:
         name: jellyseerr
         namespace: flux-system
   values:
-    env:
-      TZ: Asia/Jerusalem
-    persistence:
-      config:
-        enabled: true
-        retain: true
-        accessMode: ReadWriteOnce
+    extraEnv:
+      - name: TZ
+        value: Asia/Jerusalem
+    config:
+      persistence:
+        annotations:
+          helm.sh/resource-policy: keep
+        accessModes:
+          - ReadWriteOnce
         size: 5Gi
