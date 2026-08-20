@@ -64,6 +64,12 @@ spec:
           http:
             port: 32400
     persistence:
+      transcode:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 8Gi
+        globalMounts:
+          - path: /transcode
       config:
         enabled: true
         type: persistentVolumeClaim
