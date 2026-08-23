@@ -7,6 +7,7 @@ resources:
   - ../base/qbittorrent
   - ../base/radarr
   - ../base/jellyseerr
+  - ../base/vpn-orchestrator
   - ../base/prowlarr
   - ../base/recyclarr
   - ../base/byparr
