@@ -32,7 +32,7 @@ spec:
     image:
       registry: ghcr.io
       repository: alexfirilov/seerr-stream-first
-      tag: stream-first-c9cd974
+      tag: stream-first-76d313d
     imagePullSecrets:
       - name: ghcr-pull
     extraEnv:
