@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vpn-orchestrator
+  namespace: vpn-orchestrator
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  # Switching is serialized inside a single broker process, so two replicas
+  # must never run concurrently.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: vpn-orchestrator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: vpn-orchestrator
+    spec:
+      hostAliases:
+        - ip: 10.100.102.254
+          hostnames:
+            - opnsense.internal
+      imagePullSecrets:
+        - name: ghcr-pull
+      serviceAccountName: vpn-orchestrator
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: vpn-orchestrator
+          image: ghcr.io/alexfirilov/vpn-orchestrator:sha-75da1bc
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: vpn-orchestrator
+          env:
+            - name: API_BEARER_TOKEN_FILE
+              value: /var/run/secrets/vpn-orchestrator/broker-token
+            - name: OPNSENSE_API_KEY_FILE
+              value: /var/run/secrets/vpn-orchestrator/opnsense-api-key
+            - name: OPNSENSE_API_SECRET_FILE
+              value: /var/run/secrets/vpn-orchestrator/opnsense-api-secret
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            failureThreshold: 15
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 15
+            timeoutSeconds: 2
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 20m
+              memory: 24Mi
+            limits:
+              cpu: 250m
+              memory: 96Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: secrets
+              mountPath: /var/run/secrets/vpn-orchestrator
+              readOnly: true
+            - name: opnsense-ca
+              mountPath: /var/run/opnsense-ca
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: secrets
+          secret:
+            secretName: vpn-orchestrator-secrets
+            defaultMode: 0440
+        - name: opnsense-ca
+          configMap:
+            name: vpn-orchestrator-opnsense-ca
+            defaultMode: 0444
+        - name: tmp
+          emptyDir:
+            sizeLimit: 16Mi

@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: vpn-orchestrator
+  namespace: vpn-orchestrator
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: vpn-orchestrator
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: jellyseerr
+      ports:
+        - port: 8080
+          protocol: TCP
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # The broker may reach the router control plane and nothing else.
+    - to:
+        - ipBlock:
+            cidr: 10.100.102.254/32
+      ports:
+        - port: 443
+          protocol: TCP

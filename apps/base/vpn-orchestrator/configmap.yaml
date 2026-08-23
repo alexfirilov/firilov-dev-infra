@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vpn-orchestrator
+  namespace: vpn-orchestrator
+data:
+  LISTEN_ADDRESS: ":8080"
+  LOG_LEVEL: info
+  # Keep in step with the Seerr switchableCountries setting and with the
+  # country profiles actually provisioned in the OPNsense plugin. A country
+  # listed here but missing a real WireGuard profile fails the switch closed.
+  ALLOWED_COUNTRIES: US,GB,IL
+  OPNSENSE_BASE_URL: https://opnsense.internal
+  OPNSENSE_CA_FILE: /var/run/opnsense-ca/ca.crt
+  OPNSENSE_STATUS_PATH: /api/vpn_orchestrator/control/status
+  OPNSENSE_SWITCH_PATH: /api/vpn_orchestrator/control/switch
+  BACKEND_TIMEOUT: 75s
+  STATUS_TIMEOUT: 8s
+  # Seerr allows 120s for a switch; the broker must resolve inside that.
+  SWITCH_TIMEOUT: 90s
+  SHUTDOWN_TIMEOUT: 105s
+  IDEMPOTENCY_ENTRIES: "2048"

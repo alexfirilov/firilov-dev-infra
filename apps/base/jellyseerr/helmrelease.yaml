@@ -27,9 +27,23 @@ spec:
         name: jellyseerr
         namespace: flux-system
   values:
+    # Homelab stream-first fork of Seerr. Rebasing onto a new upstream release
+    # means retagging this image, not editing the chart.
+    image:
+      registry: ghcr.io
+      repository: alexfirilov/seerr-stream-first
+      tag: stream-first-c9cd974
+    imagePullSecrets:
+      - name: ghcr-pull
     extraEnv:
       - name: TZ
         value: Asia/Jerusalem
+    # The broker URL and API key are read together; supplying only one makes
+    # Seerr fail closed. Both live in the seerr-stream-first secret.
+    extraEnvFrom:
+      - secretRef:
+          name: seerr-stream-first
+          optional: true
     config:
       persistence:
         annotations:
