@@ -9,7 +9,7 @@ data:
   # Keep in step with the Seerr switchableCountries setting and with the
   # country profiles actually provisioned in the OPNsense plugin. A country
   # listed here but missing a real WireGuard profile fails the switch closed.
-  ALLOWED_COUNTRIES: US,IL
+  ALLOWED_COUNTRIES: US,IL,GB
   OPNSENSE_BASE_URL: https://opnsense.internal
   OPNSENSE_CA_FILE: /var/run/opnsense-ca/ca.crt
   OPNSENSE_STATUS_PATH: /api/vpn_orchestrator/control/status
