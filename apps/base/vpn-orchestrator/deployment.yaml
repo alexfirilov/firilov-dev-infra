@@ -24,6 +24,16 @@ spec:
             - opnsense.internal
       imagePullSecrets:
         - name: ghcr-pull
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s2
       serviceAccountName: vpn-orchestrator
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 120
