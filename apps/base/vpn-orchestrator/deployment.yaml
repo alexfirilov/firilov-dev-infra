@@ -46,7 +46,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: vpn-orchestrator
-          image: ghcr.io/alexfirilov/vpn-orchestrator:sha-75da1bc
+          image: ghcr.io/alexfirilov/vpn-orchestrator:sha-a9054b3
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
