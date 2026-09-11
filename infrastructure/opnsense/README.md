@@ -57,7 +57,9 @@ respective manifests.
 - Broker service switches completed in 1.5–2.6 seconds. A real desktop UI
   Reconnect TV request traversed Seerr, the broker and OPNsense in 727 ms.
 - Browser checks passed on desktop and 390px mobile, with correct selected
-  values and no JavaScript page errors.
+  values and no JavaScript page errors. Repeated against the final deployed
+  image, including a browser-only simulated default outage: service controls
+  remained enabled and unavailable routes were clearly marked.
 - With the LG on, actual Max TCP traffic used direct NAT (10.100.102.254),
   while Netflix background TCP traffic used US tunnel NAT (10.2.0.2).
   DNS interception and alias learning were visible in the packet capture.
