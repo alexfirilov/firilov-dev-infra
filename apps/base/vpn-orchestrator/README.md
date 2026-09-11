@@ -2,7 +2,8 @@
 
 Broker that sits between Seerr (stream-first fork) and the OPNsense TV VPN
 control plane. Seerr holds no OPNsense credentials; it can only ask this
-service to move the TV route to an allowlisted country.
+service to select an allowlisted country for the TV default or one of four
+fixed streaming services, or refresh TV connections.
 
 Source: https://github.com/alexfirilov/vpn-orchestrator
 Router plugin: https://github.com/alexfirilov/opnsense-vpn-orchestrator-plugin
@@ -12,8 +13,20 @@ Router plugin: https://github.com/alexfirilov/opnsense-vpn-orchestrator-plugin
 Wired into `apps/production` on 2026-08-23, once the router side was configured
 and `configctl vpn_orchestrator validate` returned clean.
 
-`ALLOWED_COUNTRIES` is `US,IL` for the current proof of concept: US routes
-through the Proton tunnel, IL is the direct ISP path with WireGuard off.
+`ALLOWED_COUNTRIES` is `US,IL,GB`. US and GB use separate, continuously
+running Proton WireGuard tunnels. IL uses the direct ISP path; selecting it
+leaves the tunnels available for other service overrides.
+
+Seerr exposes a Streaming routes menu beside the default country selector.
+The initial overrides are HBO Max → IL, Netflix → US, Prime Video → GB,
+and Disney+ → follow default. The default remains independently selectable.
+All route changes clear the TV's original-address NAT states and ordinary PF
+states; Reconnect TV repeats this without changing the selections.
+
+Router installation, DNS classification, limitations and recovery are recorded
+in [the OPNsense deployment notes](../../../infrastructure/opnsense/README.md).
+Broker readiness means that the router control API is reachable; an unavailable
+VPN route is reported in status without taking the recovery controls offline.
 
 ## Cluster state that is deliberately not in git
 

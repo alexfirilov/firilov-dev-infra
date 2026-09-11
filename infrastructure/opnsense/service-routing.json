@@ -1,0 +1,87 @@
+{
+    "schemaVersion": 1,
+    "services": {
+        "max": {
+            "name": "HBO Max",
+            "domains": [
+                "max.com",
+                "hbomax.com",
+                "hbo.com",
+                "hbomaxcdn.com",
+                "maxgo.com",
+                "discomax.com",
+                "api.discovery.com",
+                "hbo.map.fastly.net"
+            ],
+            "alias": "STREAM_SVC_MAX",
+            "rules": {
+                "US": "a58244f6-ee22-49ab-8206-2a5d245bb9ea",
+                "IL": "9e6ce85e-847d-447e-8530-7398e7ad9c76",
+                "GB": "e606fe40-83a1-459e-88cd-454c933724d2"
+            },
+            "blockRuleUuid": "d7101b9f-2e7e-4c02-bb35-f69933b8027c"
+        },
+        "netflix": {
+            "name": "Netflix",
+            "domains": [
+                "netflix.com",
+                "netflix.net",
+                "nflxext.com",
+                "nflximg.com",
+                "nflximg.net",
+                "nflxvideo.net",
+                "nflxso.net",
+                "nflxsearch.net",
+                "fast.com"
+            ],
+            "alias": "STREAM_SVC_NETFLIX",
+            "rules": {
+                "US": "76d7800f-b34a-44ca-bd20-c01fef1f3752",
+                "IL": "a9427d04-3384-4716-980f-43ec4c712d1f",
+                "GB": "b479f0c6-337b-489c-80e7-fe69316f6887"
+            },
+            "blockRuleUuid": "d61f29ad-aa29-45cc-80c3-793db5c7fe93"
+        },
+        "prime-video": {
+            "name": "Prime Video",
+            "domains": [
+                "primevideo.com",
+                "amazonvideo.com",
+                "aiv-cdn.net",
+                "aiv-delivery.net",
+                "atv-ps.amazon.com",
+                "atv-ps-eu.amazon.com",
+                "atv-ps-eu.amazon.co.uk",
+                "atv-ext.amazon.com"
+            ],
+            "alias": "STREAM_SVC_PRIME_VIDEO",
+            "rules": {
+                "US": "61ac7421-9ead-49eb-8ec0-75dd88e99786",
+                "IL": "6463bc62-3612-496d-9788-d579b90225ce",
+                "GB": "52e7fae7-6c34-4489-93b3-d7190ca4ef65"
+            },
+            "blockRuleUuid": "fb81c9c0-905c-4fe8-a3e5-8555bae2cefd"
+        },
+        "disney-plus": {
+            "name": "Disney+",
+            "domains": [
+                "disneyplus.com",
+                "disney-plus.net",
+                "disneystreaming.com",
+                "dssott.com",
+                "bamgrid.com"
+            ],
+            "alias": "STREAM_SVC_DISNEY_PLUS",
+            "rules": {
+                "US": "b02bc460-5e8d-4a38-bab9-4e127358f472",
+                "IL": "d304c424-074e-4b61-8c59-1e842a2940ba",
+                "GB": "8abd7592-bc7b-493e-9ac7-600750b02509"
+            },
+            "blockRuleUuid": "549de23d-86ae-4639-b245-3de2bc45d2e6"
+        }
+    },
+    "dnsRuleUuid": "ebacfbdc-89f4-403a-823a-0a7d5b24343f",
+    "rejectRuleUuid": "4e4df3f0-a428-450d-a5f9-71c7b6c614cb",
+    "blockRuleUuid": "1b913c7b-ee74-478d-8465-bb6440bde1d6",
+    "dotRuleUuid": "ba998923-cf7c-4e1e-a055-a2f2e2b5b0c1"
+}
