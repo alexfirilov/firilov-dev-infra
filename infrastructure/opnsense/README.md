@@ -45,6 +45,11 @@ are reset.
 
 ## Validation
 
+Final Seerr CI passed all 173 tests, type checking, formatting, translation
+checks and lint (zero errors; 19 existing warnings). Broker and router plugin
+CI also passed. The Seerr and broker runtime revisions are pinned in their
+respective manifests.
+
 - Appliance validation passed; both tunnels passed DNS and independent country
   checks, returning US and GB; direct egress returned IL.
 - Forwarded traffic through the real service rules returned IL / US / GB / US.
