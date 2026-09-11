@@ -66,7 +66,9 @@ respective manifests.
   A stale Max TCP connection received a reset after the reconnect action.
 - No TV-originated IPv6 packets were observed in a short passive sample;
   this is not proof that the TV can never use IPv6.
-- Actual application playback requires the user's confirmation.
+- On 2026-09-11, the user confirmed that HBO Max successfully played a title
+  on the LG TV with the direct Israel override. Netflix, Prime Video and
+  Disney+ application playback have not been separately confirmed.
 
 ## Recovery and upgrades
 
