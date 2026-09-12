@@ -24,9 +24,10 @@ live selections; changing a dropdown does not require a Git commit.
 | Israel | vtnet0 / ISP | direct NAT | 1.1.1.1 | HBO Max override |
 | United States | wg0 | 10.2.0.2/32 | 10.2.0.1 | Netflix override |
 | United Kingdom | wg1 | 10.3.0.2/32 | 10.3.0.1 | Prime Video override |
+| Argentina | wg2 | 10.4.0.2/32 | 10.4.0.1 | Added 2026-09-12 (Prime Video catalog titles) |
 
 Disney+ follows the independently selected default (US at validation time).
-Both tunnels remain running, using separate Proton-supported tunnel addresses.
+All three tunnels remain running, using separate Proton-supported tunnel addresses.
 
 TV TCP/UDP port 53 is redirected to dnsmasq at 127.0.0.1:53053. The persistent
 include `/usr/local/etc/dnsmasq.conf.d/vpn-orchestrator.conf` sends each service's

@@ -13,8 +13,9 @@ Router plugin: https://github.com/alexfirilov/opnsense-vpn-orchestrator-plugin
 Wired into `apps/production` on 2026-08-23, once the router side was configured
 and `configctl vpn_orchestrator validate` returned clean.
 
-`ALLOWED_COUNTRIES` is `US,IL,GB`. US and GB use separate, continuously
-running Proton WireGuard tunnels. IL uses the direct ISP path; selecting it
+`ALLOWED_COUNTRIES` is `US,IL,GB,AR`. US, GB and AR use separate, continuously
+running Proton WireGuard tunnels (AR added 2026-09-12; Proton "Smart Routing"
+server with an Argentine exit address). IL uses the direct ISP path; selecting it
 leaves the tunnels available for other service overrides.
 
 Seerr exposes a Streaming routes menu beside the default country selector.
