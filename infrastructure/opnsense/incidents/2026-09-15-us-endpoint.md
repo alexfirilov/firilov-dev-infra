@@ -53,4 +53,25 @@ confirmed repair. Record the result below.
 
 Pre-repair router backup: `/root/vpn-us-repair-20260915T105106Z/`.
 
-Recovery validation: pending replacement US configuration.
+Recovery validation (2026-09-15, completed):
+
+- Replacement server: Proton **US-NY#602** (New York, Plus tier), endpoint
+  `193.148.18.82:51820`. Obtained via the authenticated Proton browser session
+  on the Ubuntu desktop after the owner re-signed in.
+- Installed into the existing US profile (instance
+  `7245b85a-60a3-45a2-84e0-c5a96f9b616d`, peer, tunnel address `10.2.0.2/32`,
+  DNS `10.2.0.1`, gateway `WG_PROTON_GW`) via `replace-us-profile.php`; only the
+  server private key, client public key, peer public key and endpoint changed.
+  No other tunnels, keys, policies or the interface rename were touched.
+- Post-restart runtime: `wg0` peer matches config, endpoint
+  `193.148.18.82:51820`, fresh handshake (<60 s), bidirectional transfer.
+- Gateway `WG_PROTON_GW` Online, 0.0% loss, ~150 ms (consistent US-from-IL RTT).
+- Egress-country probe through the US gateway resolved to **United States**
+  (exit `193.148.18.87`, Proton/M247), confirming geo, not just tunnel liveness.
+- Authenticated Seerr broker `/v1/status` reports `connected: true`, `country:
+  US`; all service routes connected (Max→IL, Netflix→US, Prime Video→US,
+  Disney+→IL).
+
+Any TV app left mid-session on a US-routed service during the outage may still
+hold a dead connection through the old endpoint; use Seerr's "Reconnect TV" to
+flush it, or wait for the app to re-establish.
