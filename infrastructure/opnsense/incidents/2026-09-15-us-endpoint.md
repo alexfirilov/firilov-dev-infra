@@ -41,7 +41,10 @@ Seerr revision `8f885c5` names unavailable countries and explains that
 Reconnect TV refreshes TV connections, while an unavailable VPN connection
 requires repair or selection of another country. All 173 tests, type checks,
 formatting, translation extraction checks and lint passed (no lint errors;
-19 existing warnings).
+19 existing warnings). The Flux deployment is healthy. Desktop and 390px
+mobile browser checks passed without JavaScript errors; simulated outage and
+recovery statuses correctly show and remove the warning, and route controls
+remain usable. The mobile menu fits within the viewport.
 
 After installing a replacement, verify the US handshake, gateway health,
 DNS and independent egress-country probes, then verify authenticated broker
