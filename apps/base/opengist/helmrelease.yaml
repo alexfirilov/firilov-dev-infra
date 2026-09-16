@@ -1,0 +1,95 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: opengist
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://helm.opengist.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: opengist
+  namespace: flux-system
+spec:
+  releaseName: opengist
+  targetNamespace: opengist
+  install:
+    createNamespace: true
+  interval: 30m
+  chart:
+    spec:
+      chart: opengist
+      version: "0.13.0"
+      sourceRef:
+        kind: HelmRepository
+        name: opengist
+        namespace: flux-system
+  values:
+    image:
+      pullPolicy: IfNotPresent
+    # SQLite lives on a ReadWriteOnce volume, so two pods must never overlap.
+    strategy:
+      type: Recreate
+      rollingUpdate: null
+    config:
+      log-level: info
+      log-output: stdout
+      external-url: https://opengist.firilov.dev
+      # Git over HTTP is enough; the SSH server is never exposed through the gateway.
+      ssh.git-enabled: disabled
+      metrics.enabled: false
+    service:
+      ssh:
+        enabled: false
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    extraVolumes:
+      - name: tmp
+        emptyDir:
+          sizeLimit: 256Mi
+    extraVolumeMounts:
+      - name: tmp
+        mountPath: /tmp
+    persistence:
+      storageClass: local-path
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 20m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
+    livenessProbe:
+      initialDelaySeconds: 30
+    affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - k3s2
+    tolerations:
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: 60
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: 60

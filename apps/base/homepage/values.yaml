@@ -84,6 +84,12 @@ config:
             icon: bazarr
             href: https://bazarr.firilov.dev
 
+    - Development:
+        - Opengist:
+            icon: opengist
+            href: https://opengist.firilov.dev
+            description: Code Snippets
+
   bookmarks:
     - Development:
         - GitHub:
