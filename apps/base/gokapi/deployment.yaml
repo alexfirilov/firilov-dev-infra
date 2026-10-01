@@ -127,8 +127,10 @@ spec:
               mountPath: /tmp
         - name: auth-proxy
           image: docker.io/library/caddy:2.11.4-alpine
-          command: [caddy]
-          args: [run, --config, /etc/caddy/Caddyfile, --adapter, caddyfile]
+          # Copying strips the image binary's low-port file capability; this proxy uses port 8080.
+          command: [/bin/sh, -ec]
+          args:
+            - cp /usr/bin/caddy /tmp/caddy; exec /tmp/caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
           env:
             - name: GOKAPI_BASIC_AUTH_HASH
               valueFrom:
@@ -165,7 +167,7 @@ spec:
             - name: proxy
               mountPath: /etc/caddy
               readOnly: true
-            - name: tmp
+            - name: proxy-tmp
               mountPath: /tmp
       volumes:
         - name: state
@@ -181,3 +183,6 @@ spec:
         - name: tmp
           emptyDir:
             sizeLimit: 256Mi
+        - name: proxy-tmp
+          emptyDir:
+            sizeLimit: 96Mi
