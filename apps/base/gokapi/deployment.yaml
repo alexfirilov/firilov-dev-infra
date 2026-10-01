@@ -48,6 +48,8 @@ spec:
               if [ ! -f /app/state/config/config.json ]; then
                 cp /bootstrap/config.json /app/state/config/config.json
               fi
+              # Gokapi persists chunk size; reconcile this setting without replacing user state.
+              sed -i 's/"ChunkSize": [0-9]*/"ChunkSize": 10/' /app/state/config/config.json
               # Retry interrupted first initialization, then preserve existing users.
               if [ ! -f /app/state/config/bootstrap.complete ]; then
                 /app/gokapi --deployment-password "$(cat /bootstrap/bootstrap-password)"
