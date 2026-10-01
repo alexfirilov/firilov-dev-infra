@@ -18,6 +18,8 @@ spec:
         app.kubernetes.io/name: gokapi
     spec:
       automountServiceAccountToken: false
+      # The gokapi Service would inject GOKAPI_PORT=tcp://..., conflicting with app configuration.
+      enableServiceLinks: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
