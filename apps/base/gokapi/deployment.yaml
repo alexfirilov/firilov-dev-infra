@@ -127,6 +127,7 @@ spec:
               mountPath: /tmp
         - name: auth-proxy
           image: docker.io/library/caddy:2.11.4-alpine
+          command: [caddy]
           args: [run, --config, /etc/caddy/Caddyfile, --adapter, caddyfile]
           env:
             - name: GOKAPI_BASIC_AUTH_HASH
