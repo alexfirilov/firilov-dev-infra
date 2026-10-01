@@ -50,7 +50,7 @@ config:
           columns: 5
       - Development:
           style: row
-          columns: 1
+          columns: 2
 
   services:
     - Media Servers:
@@ -89,6 +89,10 @@ config:
             icon: opengist
             href: https://opengist.firilov.dev
             description: Code Snippets
+        - Gokapi:
+            icon: mdi-file-upload-outline
+            href: https://files.firilov.dev/admin
+            description: Temporary File Sharing
 
   bookmarks:
     - Development:
