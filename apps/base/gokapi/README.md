@@ -15,7 +15,7 @@ Gokapi v2.2.4 stores configuration, SQLite and files on the `gokapi` local-path
 PVC. The pod prefers k3s2; the resulting volume stays on the node where it was
 provisioned. Recreate deployment strategy prevents overlapping SQLite writers.
 The requested 20Gi is provisioning metadata; local-path does not enforce a disk
-quota. The file limit is 5120 MB and uploads use 10 MB chunks to keep requests short on slower connections.
+quota. The file limit is 5120 MB and uploads use 2 MB chunks, one at a time, to keep requests short and avoid splitting slower connections across concurrent uploads.
 
 The custom admin script seeds browser preferences to one-day expiration and
 unlimited downloads. Users can change these before uploading; they are defaults,
