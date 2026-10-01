@@ -4,7 +4,8 @@ Browser file transfer at https://files.firilov.dev/admin. Flux includes this app
 through `apps/production/kustomization.yaml`.
 
 Every URL, including download links and the API, requires HTTP Basic authentication
-at the Caddy sidecar. The username is `admin`; the password and bcrypt hash are in
+at the Caddy sidecar. The usernames are `admin` and `alexf`; both currently use the same password.
+The bootstrap password and bcrypt hash are in
 the SOPS-encrypted `gokapi-bootstrap` Secret. Gokapi uses header authentication,
 accepts only registered users, and listens on loopback inside the pod. Caddy
 overwrites the identity header with the authenticated username. Only Caddy's port
