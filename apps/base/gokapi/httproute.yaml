@@ -1,0 +1,23 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: gokapi
+  namespace: gokapi
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: http
+  hostnames:
+    - files.firilov.dev
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      timeouts:
+        request: 0s
+        backendRequest: 0s
+      backendRefs:
+        - name: gokapi
+          port: 8080

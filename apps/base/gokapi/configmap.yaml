@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gokapi-proxy
+  namespace: gokapi
+data:
+  Caddyfile: |
+    {
+      admin off
+      auto_https off
+      persist_config off
+    }
+    :8080 {
+      basic_auth {
+        admin {$GOKAPI_BASIC_AUTH_HASH}
+      }
+      header Cache-Control "private, no-store"
+      reverse_proxy 127.0.0.1:53842 {
+        # Replace client-supplied identity headers with the authenticated user.
+        header_up X-Gokapi-User {http.auth.user.id}
+        header_up X-Forwarded-Proto https
+        header_up -Authorization
+        # Override upstream cache headers after receiving the response.
+        header_down Cache-Control "private, no-store"
+        header_down CDN-Cache-Control "no-store"
+        header_down Cloudflare-CDN-Cache-Control "no-store"
+      }
+    }
+  admin.js: |
+    // Seed preferences once per browser; users can choose other expiry values.
+    (() => {
+      if (localStorage.getItem("defaultExpiry") === null) {
+        localStorage.setItem("defaultExpiry", "1");
+        localStorage.setItem("defaultUnlimitedTime", "false");
+      }
+      if (localStorage.getItem("defaultUnlimitedDownloads") === null) {
+        localStorage.setItem("defaultUnlimitedDownloads", "true");
+      }
+      if (typeof setUploadDefaults === "function" && document.getElementById("expiryDays")) {
+        setUploadDefaults();
+      }
+    })();

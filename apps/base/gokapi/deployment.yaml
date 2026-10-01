@@ -1,0 +1,180 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gokapi
+  namespace: gokapi
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  # SQLite and local-path storage require one writer at a time.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gokapi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gokapi
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s2
+      initContainers:
+        - name: bootstrap
+          image: docker.io/f0rc3/gokapi:v2.2.4
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              mkdir -p /app/state/config /app/state/data
+              if [ ! -f /app/state/config/config.json ]; then
+                cp /bootstrap/config.json /app/state/config/config.json
+              fi
+              # Retry interrupted first initialization, then preserve existing users.
+              if [ ! -f /app/state/config/bootstrap.complete ]; then
+                /app/gokapi --deployment-password "$(cat /bootstrap/bootstrap-password)"
+                touch /app/state/config/bootstrap.complete
+              fi
+          env:
+            - name: GOKAPI_CONFIG_DIR
+              value: /app/state/config
+            - name: GOKAPI_DATA_DIR
+              value: /app/state/data
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: state
+              mountPath: /app/state
+            - name: bootstrap
+              mountPath: /bootstrap
+              readOnly: true
+      containers:
+        - name: gokapi
+          image: docker.io/f0rc3/gokapi:v2.2.4
+          env:
+            - name: TZ
+              value: UTC
+            - name: GOKAPI_CONFIG_DIR
+              value: /app/state/config
+            - name: GOKAPI_DATA_DIR
+              value: /app/state/data
+            - name: GOKAPI_USE_CLOUDFLARE
+              value: "true"
+            - name: GOKAPI_GUEST_UPLOAD_BY_DEFAULT
+              value: "false"
+            - name: GOKAPI_DISABLE_DOCKER_TRUSTED_PROXY
+              value: "true"
+            - name: GOKAPI_TRUSTED_PROXIES
+              value: 127.0.0.1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          startupProbe:
+            exec:
+              command: [curl, --fail, --silent, http://127.0.0.1:53842/]
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            exec:
+              command: [curl, --fail, --silent, http://127.0.0.1:53842/]
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: [curl, --fail, --silent, http://127.0.0.1:53842/]
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          volumeMounts:
+            - name: state
+              mountPath: /app/state
+            - name: proxy
+              mountPath: /app/custom
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+        - name: auth-proxy
+          image: docker.io/library/caddy:2.11.4-alpine
+          args: [run, --config, /etc/caddy/Caddyfile, --adapter, caddyfile]
+          env:
+            - name: GOKAPI_BASIC_AUTH_HASH
+              valueFrom:
+                secretKeyRef:
+                  name: gokapi-bootstrap
+                  key: basic-auth-hash
+            - name: XDG_DATA_HOME
+              value: /tmp/caddy-data
+            - name: XDG_CONFIG_HOME
+              value: /tmp/caddy-config
+          ports:
+            - name: http
+              containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: proxy
+              mountPath: /etc/caddy
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: state
+          persistentVolumeClaim:
+            claimName: gokapi
+        - name: bootstrap
+          secret:
+            secretName: gokapi-bootstrap
+            defaultMode: 0440
+        - name: proxy
+          configMap:
+            name: gokapi-proxy
+        - name: tmp
+          emptyDir:
+            sizeLimit: 256Mi
