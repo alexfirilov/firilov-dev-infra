@@ -77,6 +77,29 @@ spec:
             - name: bootstrap
               mountPath: /bootstrap
               readOnly: true
+        - name: native-auth
+          image: docker.io/library/python:3.13-alpine@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a
+          command: [python3, -B, /migration/migrate-auth.py, /app/state, /bootstrap]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: state
+              mountPath: /app/state
+            - name: bootstrap
+              mountPath: /bootstrap
+              readOnly: true
+            - name: custom
+              mountPath: /migration
+              readOnly: true
       containers:
         - name: gokapi
           image: docker.io/f0rc3/gokapi:v2.2.4
@@ -94,7 +117,11 @@ spec:
             - name: GOKAPI_DISABLE_DOCKER_TRUSTED_PROXY
               value: "true"
             - name: GOKAPI_TRUSTED_PROXIES
-              value: 127.0.0.1
+              # Envoy connects directly from the cluster pod network.
+              value: 10.42.0.0/16
+          ports:
+            - name: http
+              containerPort: 53842
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -122,54 +149,10 @@ spec:
           volumeMounts:
             - name: state
               mountPath: /app/state
-            - name: proxy
+            - name: custom
               mountPath: /app/custom
               readOnly: true
             - name: tmp
-              mountPath: /tmp
-        - name: auth-proxy
-          image: docker.io/library/caddy:2.11.4-alpine
-          # Copying strips the image binary's low-port file capability; this proxy uses port 8080.
-          command: [/bin/sh, -ec]
-          args:
-            - cp /usr/bin/caddy /tmp/caddy; exec /tmp/caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
-          env:
-            - name: GOKAPI_BASIC_AUTH_HASH
-              valueFrom:
-                secretKeyRef:
-                  name: gokapi-bootstrap
-                  key: basic-auth-hash
-            - name: XDG_DATA_HOME
-              value: /tmp/caddy-data
-            - name: XDG_CONFIG_HOME
-              value: /tmp/caddy-config
-          ports:
-            - name: http
-              containerPort: 8080
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop: [ALL]
-          readinessProbe:
-            tcpSocket:
-              port: http
-            periodSeconds: 5
-          livenessProbe:
-            tcpSocket:
-              port: http
-            periodSeconds: 30
-          resources:
-            requests:
-              cpu: 20m
-              memory: 32Mi
-            limits:
-              memory: 128Mi
-          volumeMounts:
-            - name: proxy
-              mountPath: /etc/caddy
-              readOnly: true
-            - name: proxy-tmp
               mountPath: /tmp
       volumes:
         - name: state
@@ -179,12 +162,9 @@ spec:
           secret:
             secretName: gokapi-bootstrap
             defaultMode: 0440
-        - name: proxy
+        - name: custom
           configMap:
-            name: gokapi-proxy
+            name: gokapi-custom
         - name: tmp
           emptyDir:
             sizeLimit: 256Mi
-        - name: proxy-tmp
-          emptyDir:
-            sizeLimit: 96Mi
