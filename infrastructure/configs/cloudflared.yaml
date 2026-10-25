@@ -17,12 +17,15 @@ spec:
     spec:
       containers:
         - name: cloudflared
-          image: cloudflare/cloudflared:latest
+          # Pin the deployed release so transport changes can be measured independently.
+          image: cloudflare/cloudflared:2026.8.2@sha256:0aa26e284f05e6c77ae375b8c9c11d9eb6a448fb7bcd8d40f31cb6176189eb38
           args:
             - tunnel
             - --no-autoupdate
             - run
           env:
+            - name: TUNNEL_TRANSPORT_PROTOCOL
+              value: http2
             - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
