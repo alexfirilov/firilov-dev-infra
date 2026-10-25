@@ -49,7 +49,7 @@ spec:
                 cp /bootstrap/config.json /app/state/config/config.json
               fi
               # Gokapi persists upload settings; reconcile them without replacing user state.
-              sed -i 's/"MaxFileSizeMB":[[:space:]]*[0-9]*/"MaxFileSizeMB": 30720/; s/"ChunkSize": [0-9]*/"ChunkSize": 2/; s/"MaxParallelUploads": [0-9]*/"MaxParallelUploads": 1/' /app/state/config/config.json
+              sed -i 's/"MaxFileSizeMB":[[:space:]]*[0-9]*/"MaxFileSizeMB": 30720/; s/"ChunkSize": [0-9]*/"ChunkSize": 8/; s/"MaxParallelUploads": [0-9]*/"MaxParallelUploads": 1/' /app/state/config/config.json
               # Retry interrupted first initialization, then preserve existing users.
               if [ ! -f /app/state/config/bootstrap.complete ]; then
                 /app/gokapi --deployment-password "$(cat /bootstrap/bootstrap-password)"

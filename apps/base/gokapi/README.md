@@ -27,7 +27,7 @@ Gokapi v2.2.4 stores configuration, SQLite and files on the `gokapi` local-path
 PVC. The pod prefers k3s2; the resulting volume stays on the node where it was
 provisioned. Recreate deployment strategy prevents overlapping SQLite writers.
 The requested 20Gi is provisioning metadata; local-path does not enforce a disk
-quota. The file limit is 30720 MB (30 GiB) and uploads use 2 MB chunks, one at a time, to keep requests short and avoid splitting slower connections across concurrent uploads. The bootstrap init container reconciles the persisted file limit and chunk settings on every startup, including for existing volumes.
+quota. The file limit is 30720 MB (30 GiB) and uploads use 8 MB chunks, one at a time, to keep requests short and avoid splitting slower connections across concurrent uploads. The bootstrap init container reconciles the persisted file limit and chunk settings on every startup, including for existing volumes.
 
 The custom admin script seeds browser preferences to one-day expiration and
 unlimited downloads. Users can change these before uploading; they are defaults,
@@ -39,7 +39,10 @@ Cloudflare terminates public HTTPS. The remotely managed `k3s1` tunnel has a
 `files.firilov.dev` ingress to the existing Envoy Gateway at `http://10.100.102.54`.
 A proxied DNS CNAME points to `1c72bb9f-421f-4927-a136-7a373428313f.cfargotunnel.com`.
 Its other ingress entries and the existing cloudflared Deployment are preserved.
-HTTPRoute request timeouts are disabled for large downloads.
+HTTPRoute request timeouts are disabled for large downloads. The Cloudflared Deployment in
+`infrastructure/configs/cloudflared.yaml` uses HTTP/2 transport to Cloudflare;
+QUIC caused repeated tunnel connection failures and poor upload throughput on
+this network. The tested connector image is pinned by digest.
 
 Bootstrap copies the seed configuration and creates the admin only on a fresh
 volume. Later restarts preserve existing configuration and users while enforcing
