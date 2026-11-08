@@ -16,3 +16,4 @@ resources:
   - ../base/plex
   - ../base/opengist
   - ../base/gokapi
+  - ../base/drop
