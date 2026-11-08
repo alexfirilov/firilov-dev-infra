@@ -40,7 +40,7 @@ spec:
                       - k3s2
       containers:
         - name: drop
-          image: ghcr.io/alexfirilov/drop:sha-4527a1b
+          image: ghcr.io/alexfirilov/drop:sha-ae4c3f5
           imagePullPolicy: IfNotPresent
           env:
             - name: TZ
