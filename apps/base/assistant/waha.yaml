@@ -66,6 +66,10 @@ spec:
             - name: WAHA_API_KEY
               valueFrom:
                 secretKeyRef: { name: assistant-secrets, key: WAHA_API_KEY }
+            # Apps (MCP) call the API internally and need the key in plain form too.
+            - name: WAHA_API_KEY_PLAIN
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_API_KEY }
             - name: WAHA_DASHBOARD_USERNAME
               valueFrom:
                 secretKeyRef: { name: assistant-secrets, key: WAHA_DASHBOARD_USERNAME }
