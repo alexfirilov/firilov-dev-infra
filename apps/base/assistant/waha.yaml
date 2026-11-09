@@ -63,6 +63,9 @@ spec:
               value: "False"
             - name: WAHA_DASHBOARD_ENABLED
               value: "True"
+            # Pod-local Redis sidecar (no password).
+            - name: REDIS_URL
+              value: redis://127.0.0.1:6379
             - name: WAHA_API_KEY
               valueFrom:
                 secretKeyRef: { name: assistant-secrets, key: WAHA_API_KEY }

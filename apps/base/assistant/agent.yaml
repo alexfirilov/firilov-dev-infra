@@ -54,12 +54,12 @@ spec:
                       - k3s2
       containers:
         - name: agent
-          image: ghcr.io/alexfirilov/home-agent:sha-1ad9fec
+          image: ghcr.io/alexfirilov/home-agent:sha-79a33c0
           env:
             - name: TZ
               value: Asia/Jerusalem
             - name: AGENT_BROWSER_URL
-              value: https://agent-browser.TAILNET.ts.net
+              value: https://agent-browser.tail0562a9.ts.net
             - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 secretKeyRef: { name: assistant-secrets, key: TELEGRAM_BOT_TOKEN }
