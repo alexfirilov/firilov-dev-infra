@@ -1,0 +1,116 @@
+# WhatsApp gateway (WAHA, GOWS engine: no browser inside). The session lives in
+# /app/.sessions, so it must be on a PVC, and exactly one pod may hold it at a time.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: waha-sessions
+  namespace: assistant
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waha
+  namespace: assistant
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  # Two pods on one WhatsApp session cause StreamReplaced/DB locks and risk a ban.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: waha
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: waha
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k3s2
+      containers:
+        - name: waha
+          image: docker.io/devlikeapro/waha:gows-2026.10.1
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: TZ
+              value: Asia/Jerusalem
+            - name: WHATSAPP_DEFAULT_ENGINE
+              value: GOWS
+            - name: WHATSAPP_RESTART_ALL_SESSIONS
+              value: "True"
+            - name: WAHA_APPS_ENABLED
+              value: "True"
+            - name: WAHA_PRINT_QR
+              value: "False"
+            - name: WAHA_DASHBOARD_ENABLED
+              value: "True"
+            - name: WAHA_API_KEY
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_API_KEY }
+            - name: WAHA_DASHBOARD_USERNAME
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_DASHBOARD_USERNAME }
+            - name: WAHA_DASHBOARD_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_DASHBOARD_PASSWORD }
+            - name: WHATSAPP_SWAGGER_USERNAME
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_DASHBOARD_USERNAME }
+            - name: WHATSAPP_SWAGGER_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: assistant-secrets, key: WAHA_DASHBOARD_PASSWORD }
+          volumeMounts:
+            - name: sessions
+              mountPath: /app/.sessions
+          # /ping needs no API key; never probe the WhatsApp session itself, or a
+          # WhatsApp-side outage would restart the pod.
+          startupProbe:
+            httpGet: { path: /ping, port: http }
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet: { path: /ping, port: http }
+            periodSeconds: 15
+          livenessProbe:
+            httpGet: { path: /ping, port: http }
+            periodSeconds: 30
+            failureThreshold: 4
+          resources:
+            requests: { cpu: 50m, memory: 192Mi }
+            limits: { memory: 1Gi }
+      volumes:
+        - name: sessions
+          persistentVolumeClaim:
+            claimName: waha-sessions
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waha
+  namespace: assistant
+spec:
+  selector:
+    app.kubernetes.io/name: waha
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

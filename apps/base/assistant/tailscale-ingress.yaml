@@ -1,0 +1,34 @@
+# Owner-only access over the tailnet (never through cloudflared):
+#   https://agent-browser.<tailnet>.ts.net  - take over the assistant's browser (CAPTCHA/OTP)
+#   https://agent-whatsapp.<tailnet>.ts.net - WAHA dashboard (QR pairing, session health)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agent-browser
+  namespace: assistant
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: browser
+      port:
+        number: 3000
+  tls:
+    - hosts:
+        - agent-browser
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agent-whatsapp
+  namespace: assistant
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: waha
+      port:
+        number: 3000
+  tls:
+    - hosts:
+        - agent-whatsapp
