@@ -101,6 +101,22 @@ spec:
           resources:
             requests: { cpu: 50m, memory: 192Mi }
             limits: { memory: 1Gi }
+        # WAHA Apps (the MCP server) queue work through Redis (REDIS_URL defaults to
+        # 127.0.0.1:6379). Pod-local and ephemeral: nothing outside the pod can reach it.
+        - name: redis
+          image: docker.io/library/redis:8.8.4-alpine
+          args: ["--bind", "127.0.0.1", "--save", "", "--appendonly", "no"]
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          readinessProbe:
+            exec: { command: ["redis-cli", "ping"] }
+            periodSeconds: 15
+          resources:
+            requests: { cpu: 10m, memory: 32Mi }
+            limits: { memory: 256Mi }
       volumes:
         - name: sessions
           persistentVolumeClaim:
