@@ -54,18 +54,12 @@ spec:
                       - k3s2
       containers:
         - name: agent
-          image: ghcr.io/alexfirilov/home-agent:sha-cf34a08
+          image: ghcr.io/alexfirilov/home-agent:sha-8d7d7cc
           env:
             - name: TZ
               value: Asia/Jerusalem
             - name: AGENT_BROWSER_URL
               value: https://agent-browser.firilov.dev
-            - name: TELEGRAM_BOT_TOKEN
-              valueFrom:
-                secretKeyRef: { name: assistant-secrets, key: TELEGRAM_BOT_TOKEN }
-            - name: WAHA_MCP_KEY
-              valueFrom:
-                secretKeyRef: { name: assistant-secrets, key: WAHA_MCP_KEY }
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -73,6 +67,11 @@ spec:
           volumeMounts:
             - name: home
               mountPath: /home/agent
+            # Files, not env vars: the entrypoint moves them into locations the
+            # agent's Bash sandbox and Read tool are denied.
+            - name: secrets
+              mountPath: /run/agent-secrets
+              readOnly: true
           resources:
             requests: { cpu: 250m, memory: 768Mi }
             limits: { memory: 3Gi }
@@ -80,3 +79,10 @@ spec:
         - name: home
           persistentVolumeClaim:
             claimName: agent-home
+        - name: secrets
+          secret:
+            secretName: assistant-secrets
+            defaultMode: 0440
+            items:
+              - { key: TELEGRAM_BOT_TOKEN, path: TELEGRAM_BOT_TOKEN }
+              - { key: WAHA_MCP_KEY, path: WAHA_MCP_KEY }
