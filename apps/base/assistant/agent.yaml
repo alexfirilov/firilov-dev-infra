@@ -54,7 +54,7 @@ spec:
                       - k3s2
       containers:
         - name: agent
-          image: ghcr.io/alexfirilov/home-agent:sha-79a33c0
+          image: ghcr.io/alexfirilov/home-agent:sha-cf34a08
           env:
             - name: TZ
               value: Asia/Jerusalem
