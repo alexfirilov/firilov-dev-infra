@@ -91,3 +91,35 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    # assistant (LAN/OpenVPN only; no cloudflared route) - apps/base/assistant/httproute.yaml
+    - name: https-agent-browser
+      protocol: HTTPS
+      port: 443
+      hostname: agent-browser.firilov.dev
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: agent-browser-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: assistant
+    # assistant (LAN/OpenVPN only; no cloudflared route) - apps/base/assistant/httproute.yaml
+    - name: https-agent-whatsapp
+      protocol: HTTPS
+      port: 443
+      hostname: agent-whatsapp.firilov.dev
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: agent-whatsapp-firilov-dev-tls
+            namespace: envoy-gateway-system
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: assistant

@@ -70,7 +70,11 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: tailscale
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+              gateway.envoyproxy.io/owning-gateway-name: envoy-gateway
       ports:
         - { port: 3000, protocol: TCP }
   egress:
@@ -114,7 +118,11 @@ spec:
               app.kubernetes.io/name: agent
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: tailscale
+              kubernetes.io/metadata.name: envoy-gateway-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: envoy
+              gateway.envoyproxy.io/owning-gateway-name: envoy-gateway
       ports:
         - { port: 3000, protocol: TCP }
   egress:

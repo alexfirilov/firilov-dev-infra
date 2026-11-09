@@ -92,3 +92,29 @@ spec:
     kind: ClusterIssuer
   dnsNames:
     - bazarr.firilov.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agent-browser-firilov-dev
+  namespace: envoy-gateway-system
+spec:
+  secretName: agent-browser-firilov-dev-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - agent-browser.firilov.dev
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agent-whatsapp-firilov-dev
+  namespace: envoy-gateway-system
+spec:
+  secretName: agent-whatsapp-firilov-dev-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - agent-whatsapp.firilov.dev

@@ -8,13 +8,14 @@ The self-hosted personal assistant. The image and agent policy are in [alexfiril
 | `browser` | Headful Chromium (linuxserver/chromium with Selkies) and a Playwright MCP sidecar on `:8931` that drives it over CDP | `browser-config` 5Gi: browser profile |
 | `waha` | WhatsApp gateway (WAHA GOWS engine) with its built-in MCP at `/mcp` | `waha-sessions` 2Gi: the linked-device session |
 
-**Access.** The owner reaches these over the tailnet only (`tailscale-ingress.yaml`); nothing goes through cloudflared:
-- `https://agent-browser.<tailnet>.ts.net`: take over the browser (CAPTCHA/OTP). Basic auth: `BROWSER_USER/PASSWORD`.
-- `https://agent-whatsapp.<tailnet>.ts.net/dashboard`: WAHA dashboard. Auth: `WAHA_DASHBOARD_USERNAME/PASSWORD`.
+**Access.** LAN and home OpenVPN only (`httproute.yaml`). The routes attach only to their own HTTPS listeners, so the cloudflared tunnel (which forwards to :80) can't reach them:
+- `https://agent-browser.firilov.dev`: take over the browser (CAPTCHA/OTP). Basic auth: `BROWSER_USER/PASSWORD`.
+- `https://agent-whatsapp.firilov.dev/dashboard`: WAHA dashboard. Auth: `WAHA_DASHBOARD_USERNAME/PASSWORD`.
+- DNS: Cloudflare DNS-only A records pointing at 10.100.102.54. OPNsense Unbound strips private answers (rebind protection), so clients resolving through it need a host override.
 
 The plaintext credentials are in `~/work/private/assistant-credentials.txt` on k3s2 (mode 0600).
 
-**Network.** `networkpolicy.yaml` limits all three pods to DNS and the public internet; private, CGNAT and link-local ranges are blocked. Only the agent can reach the browser MCP and WAHA, and only the tailscale namespace can reach the UIs.
+**Network.** `networkpolicy.yaml` limits all three pods to DNS and the public internet; private, CGNAT and link-local ranges are blocked. Only the agent can reach the browser MCP and WAHA, and only the Envoy proxy pods can reach the UIs.
 
 ## Operating
 ```bash

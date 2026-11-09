@@ -1,0 +1,38 @@
+# Owner UIs: LAN / home OpenVPN only. Attached ONLY to their HTTPS listeners
+# (infrastructure/configs/gateway.yaml). The cloudflared tunnel forwards to the
+# plain-HTTP listener (:80), so these hostnames are unreachable from the internet
+# even if a tunnel rule were added by mistake. DNS: Cloudflare DNS-only A records
+# -> 10.100.102.54 (private IP; resolves publicly, routes only on LAN/VPN).
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agent-browser
+  namespace: assistant
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https-agent-browser
+  hostnames:
+    - agent-browser.firilov.dev
+  rules:
+    - backendRefs:
+        - name: browser
+          port: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: agent-whatsapp
+  namespace: assistant
+spec:
+  parentRefs:
+    - name: envoy-gateway
+      namespace: envoy-gateway-system
+      sectionName: https-agent-whatsapp
+  hostnames:
+    - agent-whatsapp.firilov.dev
+  rules:
+    - backendRefs:
+        - name: waha
+          port: 3000

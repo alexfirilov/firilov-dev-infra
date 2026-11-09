@@ -59,7 +59,7 @@ spec:
             - name: TZ
               value: Asia/Jerusalem
             - name: AGENT_BROWSER_URL
-              value: https://agent-browser.tail0562a9.ts.net
+              value: https://agent-browser.firilov.dev
             - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 secretKeyRef: { name: assistant-secrets, key: TELEGRAM_BOT_TOKEN }
