@@ -49,6 +49,9 @@ spec:
               value: /data
             - name: DROP_BASE_URL
               value: https://drop.firilov.dev
+            - name: DROP_DIRECT_URL
+              # Envoy Gateway on the LAN; bypasses Cloudflare's 100 MB request limit (shown in the API docs).
+              value: http://10.100.102.54
             - name: DROP_ADMIN_USER
               value: alexf
             - name: DROP_SECRET_FILE
